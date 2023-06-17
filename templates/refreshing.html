@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Ticker Database</title>
+  <style>
+    body {
+      text-align: center;
+      margin-top: 100px;
+      font-size: 24px;
+    }
+    .loading {
+      margin-top: 20px;
+      display: inline-block;
+      width: 64px;
+      height: 64px;
+      border: 6px solid #f3f3f3;
+      border-top-color: #3498db;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .note {
+      font-size: 18px;
+      margin-top: 20px;
+    }
+    .btn {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 16px;
+        text-decoration: none;
+        background-color: #3498db;
+        color: #fff;
+        border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h3>Ticker database is updating. Please wait...</h3>
+  <div class="loading"></div>
+  <div class="note">Process takes approximately 15 minutes.</div>
+  <form method="get">
+    <button class="btn" onclick="goBack()">Go back</button>
+  </form>
+    <script>
+      function goBack() {
+        window.history.back();
+      }
+    </script>
+</body>
+</html>

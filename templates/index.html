@@ -1,0 +1,10 @@
+<!doctype html>
+<html>
+  <body>
+    <form method="post" action="{{ url_for('ticker') }}">
+      <label for="ticker">Enter a ticker symbol:</label>
+      <input type="text" id="ticker" name="ticker">
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html>

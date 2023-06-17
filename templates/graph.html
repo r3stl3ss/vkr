@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+  <head>
+    <title>{{ ticker }} Marketcap</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+      body {
+        text-align: center;
+        margin: 0;
+        padding: 0;
+      }
+      .navbar {
+        background-color: green;
+      }
+      .navigation {
+        background-color: green;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .navigation .app-title {
+        color: #fff;
+        font-size: 12px;
+      }
+      .navigation ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: flex-end;
+      }
+      .navigation ul li {
+        margin-right: 10px;
+      }
+      .navigation ul li a {
+        text-decoration: none;
+        color: #fff;
+        padding: 5px;
+      }
+      .container {
+        margin-top: 50px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .graph-container {
+        width: 80%;
+        margin: 0 auto;
+      }
+      .navbar {
+        background-color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+      <a class="navbar-brand">VKRInvest</a>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/info">Info</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/ticker">Predictions</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/tickers_list">Tickers</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/register">Log in as admin</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    </div>
+    <div class="container">
+      <h1>{{ ticker }} Price on close</h1>
+      <div class="graph-container">
+        {% if plot_url %}
+        <img src="data:image/png;base64,{{ plot_url }}" alt="{{ ticker }} Marketcap">
+        {% endif %}
+      </div>
+      <form method="post" action="{{ url_for('ticker') }}">
+        <label for="ticker">Enter a ticker symbol:</label>
+        <input type="text" id="ticker" name="ticker">
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </body>
+</html>
