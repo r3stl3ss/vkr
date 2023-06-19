@@ -6,10 +6,21 @@ from multiprocessing import Pool
 from typing import List, Optional
 
 import numpy as np
+import psycopg2
 from tqdm import tqdm
 from yahooquery import Ticker
 
+from ml_investment.applications.fair_marketcap_yahoo import FairMarketcapYahoo
 from ml_investment.utils import load_config, load_tickers
+
+conn = psycopg2.connect(
+    host="localhost",
+    database="stocks",
+    user="postgres",
+    password="postgres"
+)
+
+cursor = conn.cursor()
 
 
 def _single_ticker_download(ticker):
@@ -20,9 +31,17 @@ def _single_ticker_download(ticker):
     for _ in range(3):
         try:
             ht = Ticker(ticker)
+            amount = ht.key_stats[ticker]["sharesOutstanding"]
             hdf = ht.history(start='2022-01-01', end=datetime.today().strftime('%Y-%m-%d'))
             hdf.to_csv('{}/{}.csv'.format(_data_path, ticker))
             time.sleep(np.random.uniform(0.2, 1.0))
+            fmy = FairMarketcapYahoo()
+            result = fmy.execute(ticker)
+            result_list = result['marketcap'].to_list()
+            for value in result_list:
+                predicted = value / amount
+                query = f"INSERT INTO {ticker} (predicted) VALUES ('{predicted}')"
+                cursor.execute(query)
             success = True
             break
         except:
@@ -33,30 +52,10 @@ def _single_ticker_download(ticker):
 
 
 def main(data_path: str=load_config()['daily_bars_data_path'], 
-         tickers: Optional[List]=load_tickers()['base_us_stocks'] + \
-                                 ['SPY', 'TLT', 'QQQ'],
-         from_date: Optional[np.datetime64]=np.datetime64('2010-01-01'),
+         tickers: Optional[List]=load_tickers()['base_us_stocks'],
+         from_date: Optional[np.datetime64]=np.datetime64('2022-01-01'),
          to_date: Optional[np.datetime64]=np.datetime64('now'),
          verbose: bool=True):
-    '''
-    Download daily price bars for base US stocks and indexes. 
-
-    Parameters
-    ----------
-    data_path:
-        path to folder in which downloaded data will be stored.
-        OR ``None`` (downloading path will be as ``daily_bars_data_path`` from 
-        `~/.ml_investment/config.json`
-    tickers:
-        tickers to download daily bars for
-    from_date:
-        start date for loading data
-    to_date:
-        end day for loading data
-    verbose:
-        show progress or not
-    '''
-    # Due to tqdm not work with multiple parameters in Pool
     global _data_path
     _data_path = data_path
 

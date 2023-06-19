@@ -2,8 +2,6 @@ import threading
 from datetime import datetime
 
 import psycopg2
-
-import download_scripts
 from download_scripts import download_yahoo_v2, download_daily_bars
 
 
